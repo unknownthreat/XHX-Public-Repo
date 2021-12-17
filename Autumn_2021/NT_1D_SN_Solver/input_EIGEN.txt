@@ -1,0 +1,19 @@
+problem_type	eigen
+
+method_type		FMFD
+
+scale   	5000
+
+grid   		5000*0.001
+
+bc			1 0
+
+material  	2000*1	3000*2
+
+!			No.	xsec_t	xsec_s	xsec_f_nu	q
+mat_xsec	1	1.0		0.5		1.0			0.0
+mat_xsec	2	0.8		0.4		0.0			0.0
+
+sn_order	4
+
+iter_limit  3	500		1.0e-6	1.0e-6

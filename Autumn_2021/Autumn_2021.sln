@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1705
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "Random_Number_Generator", "Random_Number_Generator\Random_Number_Generator.vfproj", "{7CE77DAB-04DE-47A4-A3BA-2F0C30E099CE}"
+EndProject
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "NT_1D_SN_Solver", "NT_1D_SN_Solver\NT_1D_SN_Solver.vfproj", "{5F6C8314-29C3-4845-B424-7BA0C5E2B1C5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CE77DAB-04DE-47A4-A3BA-2F0C30E099CE}.Debug|x86.ActiveCfg = Debug|Win32
+		{7CE77DAB-04DE-47A4-A3BA-2F0C30E099CE}.Debug|x86.Build.0 = Debug|Win32
+		{7CE77DAB-04DE-47A4-A3BA-2F0C30E099CE}.Release|x86.ActiveCfg = Release|Win32
+		{7CE77DAB-04DE-47A4-A3BA-2F0C30E099CE}.Release|x86.Build.0 = Release|Win32
+		{5F6C8314-29C3-4845-B424-7BA0C5E2B1C5}.Debug|x86.ActiveCfg = Debug|Win32
+		{5F6C8314-29C3-4845-B424-7BA0C5E2B1C5}.Debug|x86.Build.0 = Debug|Win32
+		{5F6C8314-29C3-4845-B424-7BA0C5E2B1C5}.Release|x86.ActiveCfg = Release|Win32
+		{5F6C8314-29C3-4845-B424-7BA0C5E2B1C5}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {867E6C85-513C-4F9A-BCC9-EE7AC413EE0A}
+	EndGlobalSection
+EndGlobal
