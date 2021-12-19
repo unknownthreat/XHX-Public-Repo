@@ -20,6 +20,8 @@ program NT_1D_SN_Solver
     call output_summary
     call transfer_iter_info
     call draw_figure('Flux', flux_ave, 20,100, print_unit)
+    call delay_msg('Output File Will Open ',2)
+    call SYSTEM('.\'//ADJUSTL(TRIM(write_file)))
     
     
 end program NT_1D_SN_Solver

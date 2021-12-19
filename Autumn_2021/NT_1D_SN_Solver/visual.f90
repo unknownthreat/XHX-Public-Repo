@@ -23,6 +23,7 @@ module visual
         character(len=5) str_time
         integer i
         
+        write(print_unit,*)
         do i = 1,time
             write(str_time,'(I5)') time+1-i
             write(print_unit,'(A)') msg//' in '//TRIM(ADJUSTL(str_time))//' seconds'

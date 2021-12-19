@@ -177,8 +177,9 @@ module frame
         write(write_unit,'(A)') '------------------------SUMMARY-----------------------------'
         write(write_unit,'(A)') 'Problem Type   :   '//TRIM(problem_type)
         write(write_unit,'(A)') 'Method Type    :   '//TRIM(method_type)
+        write(write_unit,'(A,I3)') 'SN Order       :   ',sn_order
         write(write_unit,'(A)')
-        write(write_unit,'(A,I4)') 'Iteration Cycle: ', iter_out
+        write(write_unit,'(A,I3)') 'Iteration Cycle: ', iter_out
         if(TRIM(problem_type)=='EIGEN') then
             write(write_unit,'(A,F8.5)') 'Keff Result    :  ', keff
             write(write_unit,'(A,F8.5)') 'Keff Error     :  ', error_k
@@ -194,6 +195,21 @@ module frame
         do i = 1,scale
             write(write_unit,'(I8,5X,ES12.4)') i, flux_ave(i)
         end do
+        write(write_unit,'(A)')
+        
+        call SYSTEM('CLS')
+        write(print_unit,'(A)') '----------------------SUMMARY-------------------------------'
+        write(print_unit,'(A)') 'Problem Type   :   '//TRIM(problem_type)
+        write(print_unit,'(A)') 'Method Type    :   '//TRIM(method_type)
+        write(print_unit,'(A,I3)') 'SN Order       :   ',sn_order
+        write(print_unit,'(A)')
+        write(print_unit,'(A,I3)') 'Iteration Cycle: ', iter_out
+        if(TRIM(problem_type)=='EIGEN') then
+            write(print_unit,'(A,F8.5)') 'Keff Result    :  ', keff
+            write(print_unit,'(A,F8.5)') 'Keff Error     :  ', error_k
+        end if
+        write(print_unit,'(A,ES12.4)') 'Max Flux Error : ', error_f
+        write(print_unit,'(A)') '------------------------------------------------------------'
         write(write_unit,'(A)')
     end subroutine output_summary
     
@@ -228,6 +244,7 @@ module frame
         end do
         close(iter_write_unit)
         call SYSTEM('del '//ADJUSTL(TRIM(iter_write_file)))
+        close(write_unit)
     end subroutine transfer_iter_info
     
 end module frame
