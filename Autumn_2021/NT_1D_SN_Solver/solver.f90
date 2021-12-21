@@ -146,10 +146,11 @@ module solver
             end if
             
             flux_ave_old = flux_ave
-            keff = k_new
             if(iter_out==iter_limit(2)) exit
             if(error_f<iter_error(1).and. error_k<iter_limit(2)) exit
         end do outer
+        
+        keff = k_new
         
     end subroutine solver_exec_FMFD
     
@@ -161,6 +162,8 @@ module solver
         real, allocatable       :: flux_ave_ang_highorder(:,:,:), flux_ave_highorder(:,:)
         real                    :: k_old, k_new
         real    :: norm(2), T, Qn(2), sum_C_Qn, exp_ne2T, A,B,C(2), q_ave
+        real    :: G11,G12,G21,G22,G10,G01,G20,G02,G00, temp
+        real    :: U1(2),U2(2),V1(2),V2(2),W11(2),W12(2),W21(2),W22(2)
         
         allocate(flux_ave_ang(scale,sn_order),flux_ave_ang_old(scale,sn_order),flux_l_ang(scale+1,sn_order))
         allocate(flux_ave_old(scale))
@@ -175,7 +178,14 @@ module solver
         
         outer: do
             iter_out = iter_out + 1
-            if(iter_out==iter_limit(2)) exit
+            if(mod(iter_out-1,20)==0) then
+                call SYSTEM('CLS')
+                if(TRIM(problem_type)=='EIGEN') then
+                    write(*,'(A)') 'iter_cycle  |  keff  |  error_k  |  error_flux'
+                else
+                    write(*,'(A)') 'iter_cycle  |  error_flux'
+                end if
+            end if
             
             inner: do iter_in = 1,iter_limit(1)
                 do i_sn = 1,sn_order
@@ -261,9 +271,53 @@ module solver
                 !if(maxval(error_in)<iter_error(2)) exit
             end do inner
             
-            !do i_grid = 1,scale
-            !    do i_sn = 1,sn_order
-            !        flux_ave_ang_highorder(1,i_grid,i_sn) = 
+            do i_grid = 1,scale
+                do i_sn = 1,sn_order
+                    T = xsec_t(i_grid)*grid_length(i_grid)/mu(i_sn)*0.5
+                    exp_ne2T = exp(-2*T)
+                    Qn = 0.; q_ave = 0.
+                    do i_sn_ = 1,sn_order
+                        Qn(:) = Qn(:) + xsec_s(i_grid)*flux_ave_ang_highorder(:,i_grid,i_sn_)*w(i_sn_)*0.5
+                        q_ave = q_ave + xsec_s(i_grid)*flux_ave_ang(i_grid,i_sn_)*w(i_sn_)*0.5
+                    end do
+                    if(TRIM(problem_type)=='EIGEN') then
+                        Qn(:) = Qn(:) + 0.5/k_old*flux_ave_highorder(:,i_grid)*xsec_f_nu(i_grid)
+                        q_ave = q_ave + 0.5/k_old*flux_ave_old(i_grid)*xsec_f_nu(i_grid)
+                    else
+                        Qn(:) = Qn(:) + source(i_grid)*0.5 ! ??????
+                        q_ave = q_ave + source(i_grid)*0.5
+                    end if
+                    
+                    temp = grid_length(i_grid)/mu(i_sn)
+                    G00 = 0.25*temp/(T**2)*(2*T-1+exp_ne2T)
+                    G10 = 0.25*temp/(T**3)*((T+1)*exp_ne2T-1+T)
+                    G01 = -3*G10
+                    G20 = 0.25*temp/(T**4)*(-T**2+3*T-3+(T**2+3*T+3)*exp_ne2T)
+                    G02 = 5*G20
+                    G11 = 0.25*temp/(T**4)*(2*T**3-3*T**2+3-3*(T+1)**2*exp_ne2T)
+                    G12 = 1.25*temp/(T**5)*(-T**3+2*T**2-3+(T**3+4*T**2+6*T+3)*exp_ne2T)
+                    G21 = 0.75*temp*(T+1)/(T**5)*(T**2-3*T+3-(T**2+3*T+3)*exp_ne2T)
+                    G22 = 0.25*temp/(T**6)*(5*(T**2+3*T+3)**2*exp_ne2T+2*T**5-5*T**4+15*T**2-45)
+                    
+                    temp = 2*T-1+exp_ne2T
+                    U1(1) = 2/T*(1-T-(T+1)*exp_ne2T)/temp
+                    U1(2) = -U1(1)
+                    U2(1) = 2/T**2*(T**2-3*T+3-(T**2+3*T+3)*exp_ne2T)/temp
+                    U2(2) = U2(1)
+                    
+                    if(mu(i_sn)>0) then
+                        flux_ave_ang_highorder(1,i_grid,i_sn) = U1(1)*flux_l_ang(i_grid,i_sn)+V1(1)*flux_ave_ang(i_grid,i_sn)+&
+                            & W11(1)*Qn(1)+W12(1)*Qn(2)
+                        flux_ave_ang_highorder(2,i_grid,i_sn) = U2(1)*flux_l_ang(i_grid,i_sn)+V2(1)*flux_ave_ang(i_grid,i_sn)+&
+                            & W21(1)*Qn(1)+W22(1)*Qn(2)
+                    else
+                        flux_ave_ang_highorder(1,i_grid,i_sn) = U1(2)*flux_l_ang(i_grid+1,i_sn)+V1(2)*flux_ave_ang(i_grid,i_sn)+&
+                            & W11(2)*Qn(1)+W12(2)*Qn(2)
+                        flux_ave_ang_highorder(2,i_grid,i_sn) = U2(2)*flux_l_ang(i_grid+1,i_sn)+V2(2)*flux_ave_ang(i_grid,i_sn)+&
+                            & W21(2)*Qn(1)+W22(2)*Qn(2)
+                    end if
+                end do
+            end do
             
             flux_ave = 0.; flux_ave_highorder = 0.
             do i_sn = 1,sn_order
@@ -272,6 +326,7 @@ module solver
                 flux_ave_highorder(2,:) = flux_ave_highorder(2,:) + flux_ave_ang_highorder(2,:,i_sn)
             end do
             error_flux = abs(flux_ave-flux_ave_old)/flux_ave
+            error_f = maxval(error_flux)
             
             if(TRIM(problem_type)=='EIGEN') then
                 norm = 0.
@@ -283,17 +338,18 @@ module solver
                 k_new = k_old* norm(1)/norm(2)
                 error_k = ABS((k_new-k_old)/k_new)
                 k_old = k_new
+                
+                call output_iter_info(iter_out, error_f, k_new, error_k)
+            else
+                call output_iter_info(iter_out, error_f)
             end if
             
-            if(TRIM(problem_type)=='EIGEN') then
-                print*, iter_out, iter_sweep, k_new, error_k, maxval(error_flux)
-            else
-                print*, iter_out, maxval(error_flux)
-            end if
             
             flux_ave_old = flux_ave
             if(iter_out>=iter_limit(2)) exit
-            if(maxval(error_flux)<iter_error(2)) exit
+            if(error_f<iter_error(1).and. error_k<iter_limit(2)) exit
         end do outer
+        
+        keff = k_new
     end subroutine solver_exec_CMNM
 end module
