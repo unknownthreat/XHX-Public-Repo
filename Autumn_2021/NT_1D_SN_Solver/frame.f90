@@ -136,6 +136,7 @@ module frame
             end if
         end do
         write(*,*) '>- Selected Problem Type: '//TRIM(problem_type)
+        write(*,*) '>- Selected Method Type : '//TRIM(method_type)
         write(*,*)
         write(*,*) '>> Assigning xsec...'
         write(*,*)
@@ -162,7 +163,7 @@ module frame
         
         write(iter_write_unit,'(A)') '--------------Iteration Process Information-----------------'
         if(TRIM(problem_type)=='EIGEN') then
-            write(iter_write_unit,'(A)') 'iter_cycle  |  keff  |  error_k  |  error_flux'
+            write(iter_write_unit,'(A)') 'iter_cycle  |   keff   |   error_k   |  error_flux'
         else
             write(iter_write_unit,'(A)') 'iter_cycle  |  error_flux'
         end if
@@ -177,9 +178,12 @@ module frame
         write(write_unit,'(A)') '------------------------SUMMARY-----------------------------'
         write(write_unit,'(A)') 'Problem Type   :   '//TRIM(problem_type)
         write(write_unit,'(A)') 'Method Type    :   '//TRIM(method_type)
-        write(write_unit,'(A,I3)') 'SN Order       :   ',sn_order
+        write(write_unit,'(A,I6)') 'Total Mesh Num :', scale
+        write(write_unit,'(A,I3)') 'SN Order       : ',sn_order
+        write(write_unit,'(A,ES10.2)') 'Flux Cov. Error: ', iter_error(1)
+        if(TRIM(problem_type)=='EIGEN') write(write_unit,'(A,ES10.2)') 'Keff Cov. Error: ', iter_error(2)
         write(write_unit,'(A)')
-        write(write_unit,'(A,I3)') 'Iteration Cycle: ', iter_out
+        write(write_unit,'(A,I3)') 'Iteration Cycle:  ', iter_out
         if(TRIM(problem_type)=='EIGEN') then
             write(write_unit,'(A,F8.5)') 'Keff Result    :  ', keff
             write(write_unit,'(A,F8.5)') 'Keff Error     :  ', error_k
@@ -191,9 +195,9 @@ module frame
         call draw_figure('Flux', flux_ave, 40,120, write_unit)
         
         write(write_unit,'(A)') '--------------------Flux Distribution-----------------------'
-        write(write_unit,'(A)') 'Gird Number  |  Flux Ave'
+        write(write_unit,'(A)') 'Grid Number  |  Gird Width  |  Flux Ave'
         do i = 1,scale
-            write(write_unit,'(I8,5X,ES12.4)') i, flux_ave(i)
+            write(write_unit,'(X,I6,11X,F6.4,5X,ES12.4)') i, grid_length(i), flux_ave(i)
         end do
         write(write_unit,'(A)')
         
@@ -201,9 +205,9 @@ module frame
         write(print_unit,'(A)') '----------------------SUMMARY-------------------------------'
         write(print_unit,'(A)') 'Problem Type   :   '//TRIM(problem_type)
         write(print_unit,'(A)') 'Method Type    :   '//TRIM(method_type)
-        write(print_unit,'(A,I3)') 'SN Order       :   ',sn_order
+        write(print_unit,'(A,I3)') 'SN Order       : ',sn_order
         write(print_unit,'(A)')
-        write(print_unit,'(A,I3)') 'Iteration Cycle: ', iter_out
+        write(print_unit,'(A,I3)') 'Iteration Cycle:  ', iter_out
         if(TRIM(problem_type)=='EIGEN') then
             write(print_unit,'(A,F8.5)') 'Keff Result    :  ', keff
             write(print_unit,'(A,F8.5)') 'Keff Error     :  ', error_k
@@ -220,8 +224,8 @@ module frame
         real, intent(in), optional  :: keff, error_k
         
         if(present(keff)) then
-            write(iter_write_unit,'(I6,6X,F8.5,2X,ES12.4,4X,ES12.4)') iter_out, keff, error_k, error_f
-            write(*,'(I6,4X,F8.5,4X,ES12.4,4X,ES12.4)') iter_out, keff, error_k, error_f
+            write(iter_write_unit,'(I6,7X,F8.5,2X,ES12.4,3X,ES12.4)') iter_out, keff, error_k, error_f
+            write(*,'(I6,7X,F8.5,2X,ES12.4,3X,ES12.4)') iter_out, keff, error_k, error_f
         else
             write(iter_write_unit,'(X,I5,7X,ES12.4)') iter_out, error_f
             write(*,'(X,I5,7X,ES12.4)') iter_out, error_f
