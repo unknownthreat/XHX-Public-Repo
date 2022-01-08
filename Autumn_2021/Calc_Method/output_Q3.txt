@@ -1,0 +1,32 @@
+============================================================
+              <--  Calculation Method Program -->           
+         Original Author: Xu Haoxiang  ID: 3121103330       
+         Lisenced Under CC BY-NC-SA 4.0 International       
+============================================================
+
+------------Question 3------------
+The solution for file "FuncData20211.dat" is :  1.414
+Total Time Cost                 : 0.000 seconds
+Time cost for reading input     : 0.000 seconds
+Time cost for calulating matrix : 0.000 seconds
+ 
+The solution for file "FuncData20212.dat" is :  1.732
+Total Time Cost                 : 0.000 seconds
+Time cost for reading input     : 0.000 seconds
+Time cost for calulating matrix : 0.000 seconds
+ 
+The solution for file "FuncData20213.dat" is :  2.236
+Total Time Cost                 : 0.021 seconds
+Time cost for reading input     : 0.021 seconds
+Time cost for calulating matrix : 0.000 seconds
+ 
+The solution for file "FuncData20214.dat" is :  2.449
+Total Time Cost                 : 0.018 seconds
+Time cost for reading input     : 0.013 seconds
+Time cost for calulating matrix : 0.005 seconds
+ 
+The solution for file "FuncData20215.dat" is :  1.618
+Total Time Cost                 : 0.041 seconds
+Time cost for reading input     : 0.032 seconds
+Time cost for calulating matrix : 0.009 seconds
+ 

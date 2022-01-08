@@ -1,0 +1,14 @@
+============================================================
+              <--  Calculation Method Program -->           
+         Original Author: Xu Haoxiang  ID: 3121103330       
+         Lisenced Under CC BY-NC-SA 4.0 International       
+============================================================
+
+------------Question 2------------
+File Name : 长津湖每日票房.csv
+Total box office on DAY 365 is :         603553.15
+Total box office on 31 more days is :    582240.37
+ 
+File Name : 战狼II每日票房.csv
+Total box office on DAY 365 is :         503818.05
+ 

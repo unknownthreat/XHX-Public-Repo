@@ -1,0 +1,10 @@
+============================================================
+              <--  Calculation Method Program -->           
+         Original Author: Xu Haoxiang  ID: 3121103330       
+         Lisenced Under CC BY-NC-SA 4.0 International       
+============================================================
+
+------------Question 1------------
+The length of both sides are (m) :      5118.40     5340.82
+The total price is :     47066508 RMB
+ 
